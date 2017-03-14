@@ -1,0 +1,16 @@
+p#notice = notice
+
+p
+  strong Title:
+  = @item.title
+p
+  strong Url:
+  = link_to @item.url, @item.url
+  = @item.title
+p
+  strong Comments Url:
+  = link_to @item.comments_url, @item.comments_url
+
+= link_to 'Edit', edit_item_path(@item)
+'|
+= link_to 'Back', items_path
