@@ -23,10 +23,14 @@ class ItemsController < ApplicationController
   def create
     @item = current_user.items.build(item_params)
 
-    if @item.save
-      redirect_to @item, notice: 'Item was successfully created.'
-    else
-      render :new
+    respond_to do |format|
+      if @item.save
+        format.html { redirect_to @item, notice: 'Item was successfully created.' }
+        format.json { render json: {success: true} }
+      else
+        formal.html { render :new }
+        format.json { render json: @item.errors, status: :unprocessable_entity }
+      end
     end
   end
 
