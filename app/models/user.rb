@@ -15,6 +15,7 @@
 #  last_sign_in_ip        :inet
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
+#  api_key                :string
 #
 # Indexes
 #
@@ -25,4 +26,21 @@
 class User < ApplicationRecord
   devise :database_authenticatable, :registerable, :recoverable, :rememberable, :trackable, :validatable
   has_many :items
+
+  before_save :ensure_api_key
+
+  def ensure_api_key
+    if api_key.blank?
+      self.api_key = generate_api_key
+    end
+  end
+
+  private
+
+  def generate_api_key
+    loop do
+      key = Devise.friendly_token
+      break key unless User.where(api_key: key).first
+    end
+  end
 end
