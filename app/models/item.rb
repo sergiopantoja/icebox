@@ -21,4 +21,10 @@
 
 class Item < ApplicationRecord
   belongs_to :user
+
+  after_create :broadcast_item
+
+  def broadcast_item
+    UserChannel.broadcast_to(user, self)
+  end
 end

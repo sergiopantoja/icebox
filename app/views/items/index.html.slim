@@ -9,15 +9,22 @@ table
       th
       th
 
-  tbody
+  tbody#itemlist
     - @items.each do |item|
       tr
         td = link_to item.title, item.url
-        td = link_to 'Comments', item.comments_url
-        td = link_to 'Show', item
-        td = link_to 'Edit', edit_item_path(item)
+        / td = link_to 'Comments', item.comments_url
+        / td = link_to 'Show', item
+        / td = link_to 'Edit', edit_item_path(item)
         td = link_to 'Destroy', item, data: { confirm: 'Are you sure?' }, method: :delete
 
 br
 
 = link_to 'New Item', new_item_path
+
+javascript:
+  App.cable.subscriptions.create({channel: "UserChannel", id: "#{current_user.id}"}, {
+    received: function(data) {
+      $('#itemlist').append("<tr><td><a href='" + data.url + "' target='_blank'>" + data.title + "</a></td></tr>");
+    }
+  });
